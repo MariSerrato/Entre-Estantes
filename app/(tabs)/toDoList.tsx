@@ -49,7 +49,8 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold', 
         textAlign: 'center',
-        marginBottom: 20
+        marginBottom: 20,
+        color: "#3e2925"
     },
     inputContainer: {
         flexDirection: 'row',

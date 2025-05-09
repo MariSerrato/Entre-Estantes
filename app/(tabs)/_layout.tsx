@@ -19,6 +19,7 @@ export default function TabLayout() {
 
       }}
     >
+      
       <Tabs.Screen 
         name = "index" 
         options = {{ 
@@ -48,8 +49,19 @@ export default function TabLayout() {
         }} 
        />
 
-    </Tabs>
+    
 
+    <Tabs.Screen 
+        name = "buscarLivro" 
+        options = {{ 
+          title: 'Busque Seu Livro', 
+          tabBarIcon: ({color, focused}) => (
+            <Ionicons name = {focused ? 'bookmarks' : 'bookmarks-outline'} color = {color} size = {24} />
+          ),
+        }} 
+      />
+
+        </Tabs>
     
   );
 }
