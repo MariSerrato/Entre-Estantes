@@ -11,14 +11,9 @@ import {
   ListRenderItem,
 } from 'react-native';
 
-interface Livro {
-  id: string;
-  volumeInfo: {
-    title: string;
-    authors?: string[];
-    infoLink?: string;
-  };
-}
+import { Livro } from '../types/Livro';
+
+import { buscarLivrosAPI } from '../hooks/buscarLivro';
 
 export default function BusqueSeuLivro(): JSX.Element {
   const [busca, setBusca] = useState<string>('');
@@ -27,25 +22,18 @@ export default function BusqueSeuLivro(): JSX.Element {
   async function buscarLivros(): Promise<void> {
     if (busca.trim() === '') {
       Alert.alert('Erro', 'Digite um termo para buscar.');
+      setResultados([]);
       return;
     }
 
     try {
-      const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(busca)}`);
-      const data = await response.json();
-
-      const livros: Livro[] = (data.items || []).map((item: any) => ({
-        id: item.id,
-        volumeInfo: {
-          title: item.volumeInfo?.title || 'Sem título',
-          authors: item.volumeInfo?.authors,
-          infoLink: item.volumeInfo?.infoLink,
-        },
-      }));
-
+      const livros = await buscarLivrosAPI(busca);
+      if (livros.length === 0) {
+        Alert.alert('Nenhum resultado encontrado', 'Tente novamente com outro termo.');
+      }
       setResultados(livros);
     } catch (error) {
-      console.error(error);
+      console.error('Erro ao buscar livros:', error);
       Alert.alert('Erro', 'Não foi possível buscar os livros.');
     }
   }
@@ -79,12 +67,16 @@ export default function BusqueSeuLivro(): JSX.Element {
       />
       <Button title="Buscar" onPress={buscarLivros} color="#5C4F4B" />
 
-      <FlatList
-        data={resultados}
-        renderItem={renderResultado}
-        keyExtractor={(item) => item.id}
-        style={styles.resultados}
-      />
+      {resultados.length > 0 ? (
+        <FlatList
+          data={resultados}
+          renderItem={renderResultado}
+          keyExtractor={(item) => item.id}
+          style={styles.resultados}
+        />
+      ) : (
+        <Text style={styles.noResultsText}>Nenhum livro encontrado.</Text>
+      )}
     </View>
   );
 }
@@ -138,5 +130,11 @@ const styles = StyleSheet.create({
   snippet: {
     fontSize: 14,
     color: '#666',
+  },
+  noResultsText: {
+    fontSize: 16,
+    color: '#937d62',
+    textAlign: 'center',
+    marginTop: 20,
   },
 });

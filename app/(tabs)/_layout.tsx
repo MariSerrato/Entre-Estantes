@@ -56,7 +56,7 @@ export default function TabLayout() {
         options = {{ 
           title: 'Busque Seu Livro', 
           tabBarIcon: ({color, focused}) => (
-            <Ionicons name = {focused ? 'bookmarks' : 'bookmarks-outline'} color = {color} size = {24} />
+            <Ionicons name = {focused ? 'search-circle' : 'search-circle-outline'} color = {color} size = {24} />
           ),
         }} 
       />
